@@ -22,6 +22,7 @@ DPSTEXPA
 '''
 
 import pandas as pd
+import numpy as np
 
 def combine_and_clean():
 	combined_snapshot = pd.DataFrame(columns = ['YEAR', 'DISTRICT', 'DistrictPBlack', 
@@ -43,8 +44,11 @@ def combine_and_clean():
 			"DPSTKIDR": "DistrictStuTeachRatio",
 			"DPSTEXPA": "DistrictAverageStaffExp"})
 		combined_snapshot = combined_snapshot.append(ss, ignore_index=True)
-	combined_snapshot.to_excel("District Snapshots\Combined District Profile.xlsx",index=False)
+	combined_snapshot['DistrictStuTeachRatio'] = pd.to_numeric(combined_snapshot['DistrictStuTeachRatio'], downcast='float', errors='coerce')
+	combined_snapshot['DistrictAverageStaffExp'] = pd.to_numeric(combined_snapshot['DistrictAverageStaffExp'], downcast='float', errors='coerce')
+	combined_snapshot.loc[combined_snapshot['DistrictStuTeachRatio'] < 0, ['DistrictStuTeachRatio']]=np.nan
 
+	combined_snapshot.to_excel("District Snapshots\Combined District Profile.xls",index=False)
 
 combine_and_clean()
 
